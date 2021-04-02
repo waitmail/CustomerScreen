@@ -37,12 +37,15 @@ namespace CustomerScreen
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            currentIndex++;
-            if (currentIndex > ListPathPictures.Count - 1)
+            if (ListPathPictures.Count > 0)
             {
-                currentIndex = 0;
+                currentIndex++;
+                if (currentIndex > ListPathPictures.Count - 1)
+                {
+                    currentIndex = 0;
+                }
+                pictureBox1.Load(ListPathPictures[currentIndex]);
             }
-            pictureBox1.Load(ListPathPictures[currentIndex]);
         }
 
         public class CustomerScreen
@@ -71,11 +74,14 @@ namespace CustomerScreen
             //MessageBox.Show(Application.StartupPath+"\\"+ "\\Pictures\\706 на 663  сделай весну на максимум.jpg");
             //pictureBox1.Load(Application.StartupPath + "\\" + "\\Pictures\\706 на 663  сделай весну на максимум.jpg");
             DirectoryInfo dir = new DirectoryInfo(Application.StartupPath + "\\" + "\\Pictures");
-            foreach (FileInfo file in dir.GetFiles())
+            foreach (FileInfo file in dir.GetFiles("*.jpg"))
             {
                 ListPathPictures.Add(file.FullName);                
             }
-            pictureBox1.Load(ListPathPictures[currentIndex]);
+            if (ListPathPictures.Count > 0)
+            {
+                pictureBox1.Load(ListPathPictures[currentIndex]);
+            }
 
         }
         
@@ -84,11 +90,7 @@ namespace CustomerScreen
             if (e.KeyCode == Keys.Escape)
             {
                 runung = false;
-                receiver.Close();
-                //receiveThread.Abort();
-                //receiveThread.Join(100);
-                //receiveThread.Interrupt();                
-                //receiveThread = null;
+                receiver.Close();                
                 timer.Stop();
                 timer.Dispose();
                 this.Close();
