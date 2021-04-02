@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace CustomerScreen
 {
@@ -16,14 +17,33 @@ namespace CustomerScreen
     {
         //public delegate void load_datain_datagrid(DataTable dataTable);
         public delegate void set_data_in_cash_programm(DataTable dataTable);
+        private System.Timers.Timer timer = new System.Timers.Timer();
+        private List<String> ListPathPictures = new List<string>();
+        private int currentIndex = 0;
+        Thread receiveThread = null;
+        private bool runung = true;
+        private UdpClient receiver = null;
+
 
         public Form1()
         {
             InitializeComponent();
             this.Load += Form1_Load;
             this.Shown += Form1_Shown;
+            timer.Interval = 30000;
+            timer.Elapsed += Timer_Elapsed;
+
         }
 
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            currentIndex++;
+            if (currentIndex > ListPathPictures.Count - 1)
+            {
+                currentIndex = 0;
+            }
+            pictureBox1.Load(ListPathPictures[currentIndex]);
+        }
 
         public class CustomerScreen
         {
@@ -40,21 +60,39 @@ namespace CustomerScreen
 
         private void Form1_Shown(object sender, EventArgs e)
         {
-            Thread receiveThread = new Thread(new ThreadStart(ReceiveMessage));
+            receiveThread = new Thread(new ThreadStart(ReceiveMessage));
             receiveThread.Start();            
+            timer.Start();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            pictureBox1.Load("IMG_9198.jpg");            
+            //pictureBox1.Load("IMG_9198.jpg");
+            //MessageBox.Show(Application.StartupPath+"\\"+ "\\Pictures\\706 на 663  сделай весну на максимум.jpg");
+            //pictureBox1.Load(Application.StartupPath + "\\" + "\\Pictures\\706 на 663  сделай весну на максимум.jpg");
+            DirectoryInfo dir = new DirectoryInfo(Application.StartupPath + "\\" + "\\Pictures");
+            foreach (FileInfo file in dir.GetFiles())
+            {
+                ListPathPictures.Add(file.FullName);                
+            }
+            pictureBox1.Load(ListPathPictures[currentIndex]);
+
         }
         
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
+                runung = false;
+                receiver.Close();
+                //receiveThread.Abort();
+                //receiveThread.Join(100);
+                //receiveThread.Interrupt();                
+                //receiveThread = null;
+                timer.Stop();
+                timer.Dispose();
                 this.Close();
-                this.Dispose();
+                this.Dispose();                
             }         
         }
 
@@ -90,11 +128,12 @@ namespace CustomerScreen
 
         private void ReceiveMessage()
         {
-            UdpClient receiver = new UdpClient(12345); // UdpClient для получения данных
+            //UdpClient 
+            receiver = new UdpClient(12345); // UdpClient для получения данных
             IPEndPoint remoteIp = null; // адрес входящего подключения
             try
             {
-                while (true)
+                while (runung)
                 {
                     byte[] data = receiver.Receive(ref remoteIp); // получаем данные
                     string message = Encoding.UTF8.GetString(data);
