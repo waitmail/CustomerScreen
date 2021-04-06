@@ -55,7 +55,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(673, 12);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(675, 653);
+            this.dataGridView1.Size = new System.Drawing.Size(675, 644);
             this.dataGridView1.TabIndex = 5;
             // 
             // lbl_to_pay
@@ -64,7 +64,7 @@
             this.lbl_to_pay.AutoSize = true;
             this.lbl_to_pay.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lbl_to_pay.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lbl_to_pay.Location = new System.Drawing.Point(676, 674);
+            this.lbl_to_pay.Location = new System.Drawing.Point(673, 677);
             this.lbl_to_pay.Name = "lbl_to_pay";
             this.lbl_to_pay.Size = new System.Drawing.Size(203, 41);
             this.lbl_to_pay.TabIndex = 6;
@@ -77,7 +77,7 @@
             this.lbl_sum.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lbl_sum.Location = new System.Drawing.Point(1149, 674);
             this.lbl_sum.Name = "lbl_sum";
-            this.lbl_sum.Size = new System.Drawing.Size(199, 39);
+            this.lbl_sum.Size = new System.Drawing.Size(199, 44);
             this.lbl_sum.TabIndex = 7;
             this.lbl_sum.Text = "0.00";
             this.lbl_sum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;

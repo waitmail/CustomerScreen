@@ -31,7 +31,7 @@ namespace CustomerScreen
             this.Load += Form1_Load;
             this.Shown += Form1_Shown;
             timer.Interval = 30000;
-            timer.Elapsed += Timer_Elapsed;
+            timer.Elapsed += Timer_Elapsed;           
 
         }
 
@@ -90,12 +90,27 @@ namespace CustomerScreen
             if (e.KeyCode == Keys.Escape)
             {
                 runung = false;
-                receiver.Close();                
+                receiver.Close();
+                receiver = null;
                 timer.Stop();
                 timer.Dispose();
                 this.Close();
                 this.Dispose();                
             }         
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            if (runung)
+            {
+                runung = false;
+                receiver.Close();
+                receiver = null;
+                timer.Stop();
+                timer.Dispose();
+                this.Close();
+                this.Dispose();
+            }
         }
 
         public void set_data_in_cash_programm_in_datagrid(DataTable dataTable)
@@ -162,7 +177,10 @@ namespace CustomerScreen
             }
             finally
             {
-                receiver.Close();
+                if (receiver != null)
+                {
+                    receiver.Close();
+                }
             }
         }
 
