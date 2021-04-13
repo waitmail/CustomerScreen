@@ -136,6 +136,10 @@ namespace CustomerScreen
                 to_pay += (Convert.ToDecimal(row[1].ToString()) * Convert.ToDecimal(row[2].ToString()));
             }
             lbl_sum.Text = to_pay.ToString("### ### ###.##");
+            if (lbl_sum.Text.Trim().Length == 0)
+            {
+                lbl_sum.Text = "0.00";
+            }
         }
 
         public void load_datain_datagrid(DataTable dataTable)

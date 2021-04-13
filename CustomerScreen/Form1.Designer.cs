@@ -55,7 +55,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(673, 12);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(675, 644);
+            this.dataGridView1.Size = new System.Drawing.Size(675, 647);
             this.dataGridView1.TabIndex = 5;
             // 
             // lbl_to_pay
