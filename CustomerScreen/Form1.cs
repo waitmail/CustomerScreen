@@ -23,6 +23,7 @@ namespace CustomerScreen
         Thread receiveThread = null;
         private bool runung = true;
         private UdpClient receiver = null;
+        private int show_price = 0;
 
 
         public Form1()
@@ -51,6 +52,7 @@ namespace CustomerScreen
         public class CustomerScreen
         {
             public List<CheckPosition> ListCheckPositions { get; set; }
+            public int show_price { get; set; }
         }
 
         public class CheckPosition
@@ -116,29 +118,65 @@ namespace CustomerScreen
         public void set_data_in_cash_programm_in_datagrid(DataTable dataTable)
         {            
             dataGridView1.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", 14);
-            dataGridView1.DataSource = dataTable;
-            dataGridView1.Columns[0].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridView1.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridView1.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             
-
-            dataGridView1.Columns[0].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dataGridView1.Columns[0].Width = 450;
-            dataGridView1.Columns[1].Width = 70;
-            dataGridView1.Columns[2].Width = 100;         
-            dataGridView1.Columns[2].DefaultCellStyle.Format = "##.00";
-
-            dataGridView1.ClearSelection();
-            decimal to_pay = 0;
-            foreach (DataRow row in dataTable.Rows)
+            if (show_price == 1)
             {
-                to_pay += (Convert.ToDecimal(row[1].ToString()) * Convert.ToDecimal(row[2].ToString()));
+                dataGridView1.DataSource = dataTable;
+                dataGridView1.Columns[0].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                dataGridView1.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+                dataGridView1.Columns[0].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+                dataGridView1.Columns[0].Width = 450;
+                dataGridView1.Columns[1].Width = 70;
+                dataGridView1.Columns[2].Width = 100;
+                dataGridView1.Columns[2].DefaultCellStyle.Format = "##.00";
+
+                dataGridView1.ClearSelection();
+                decimal to_pay = 0;
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    to_pay += (Convert.ToDecimal(row[1].ToString()) * Convert.ToDecimal(row[2].ToString()));
+                }
+
+
+                lbl_sum.Text = to_pay.ToString("### ### ###.##");
+                if (lbl_sum.Text.Trim().Length == 0)
+                {
+                    lbl_sum.Text = "0.00";
+                }
             }
-            lbl_sum.Text = to_pay.ToString("### ### ###.##");
-            if (lbl_sum.Text.Trim().Length == 0)
+            else
             {
-                lbl_sum.Text = "0.00";
+                DataTable dt2 = dataTable.Copy();
+                dt2.Columns.RemoveAt(2);
+                dataGridView1.DataSource = dt2;
+
+                dataGridView1.Columns[0].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                dataGridView1.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                //dataGridView1.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+                dataGridView1.Columns[0].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+                dataGridView1.Columns[0].Width = 550;
+                dataGridView1.Columns[1].Width = 70;
+                //dataGridView1.Columns[2].Width = 100;
+                //dataGridView1.Columns[2].DefaultCellStyle.Format = "##.00";
+
+                dataGridView1.ClearSelection();
+                decimal to_pay = 0;
+                //foreach (DataRow row in dataTable.Rows)
+                //{
+                //    to_pay += (Convert.ToDecimal(row[1].ToString()) * Convert.ToDecimal(row[2].ToString()));
+                //}
+
+
+                lbl_sum.Text = to_pay.ToString("### ### ###.##");
+                if (lbl_sum.Text.Trim().Length == 0)
+                {
+                    lbl_sum.Text = "0.00";
+                }
             }
         }
 
@@ -160,6 +198,7 @@ namespace CustomerScreen
                     string message = Encoding.UTF8.GetString(data);
                     //Console.WriteLine("Собеседник: {0}", message);                    
                     CustomerScreen customerScreen = JsonConvert.DeserializeObject<CustomerScreen>(message);
+                    this.show_price = customerScreen.show_price;
                     DataTable dataTable = new DataTable();
                     dataTable.Columns.Add("Наименование");
                     dataTable.Columns.Add("Количество", new Int32().GetType());
